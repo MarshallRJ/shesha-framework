@@ -142,6 +142,10 @@ namespace ShaCompanyName.ShaProjectName.Web.Host.Startup
 
 		public void Configure(IApplicationBuilder app, IBackgroundJobClient backgroundJobs)
 		{
+			// Must be first: releases per-request root-container resolutions at request end. Required to make
+			// SheshaFrameworkModule's RequestScopedReleasePolicy actually bound the release-policy dictionary.
+			app.UseSheshaRequestScopeRelease();
+
 			// Security headers. Registered first and applied in `OnStarting` so that the values
 			// are written on every response and cannot be overwritten by later middleware.
 			app.Use(async (context, next) =>
